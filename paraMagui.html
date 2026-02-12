@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Magui ❤️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --primary: #c1121f;
+            --bg: #fff0f3;
+            --text: #590d22;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg);
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* --- FONDO ANIMADO --- */
+        .falling-element {
+            position: absolute;
+            top: -10%;
+            user-select: none;
+            z-index: 1; 
+            opacity: 0.7;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- TARJETA --- */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(193, 18, 31, 0.2);
+            position: relative;
+            z-index: 10;
+            border: 2px solid #ffccd5;
+            transition: all 0.5s ease;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .btn-start, .btn-yes {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-family: 'Dancing Script', cursive; 
+            transition: transform 0.2s;
+        }
+
+        .btn-start:hover, .btn-yes:hover { transform: scale(1.05); }
+
+        /* Botón NO travieso */
+        .btn-no {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Dancing Script', cursive; 
+            position: relative; /* Necesario para moverlo */
+            transition: all 0.1s; /* Movimiento rápido */
+        }
+
+        .poem-container {
+            display: none; 
+            min-height: 300px;
+        }
+
+        .line {
+            display: block;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-out;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #4a4e69;
+            margin-bottom: 8px;
+        }
+
+        .line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Contenedor de botones SI/NO */
+        .buttons-container {
+            display: none; 
+            margin-top: 30px;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .celebration { display: none; }
+
+    </style>
+</head>
+<body>
+
+    <audio id="music" loop>
+        <source src="cancion.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="card">
+        
+        <div id="screen-intro">
+            <h1>Para Magui</h1>
+            <p>Hay mensajes que la distancia no puede borrar...</p>
+            <br>
+            <p style="font-size: 0.8rem; color: #888;">(Haz clic para empezar)</p>
+            <button class="btn-start" onclick="startExperience()">Abrir Carta 💌</button>
+        </div>
+
+        <div id="screen-poem" class="poem-container">
+            <h1>En la distancia...</h1>
+            <div id="lines-box">
+                <span class="line">Aunque estemos lejos, hoy quiero decirte,</span>
+                <span class="line">que mi pensamiento siempre vuela a ti.</span>
+                <span class="line">Eres luz, eres paz, y aunque no pueda irte</span>
+                <span class="line">a abrazar, te siento muy cerca de mí.</span>
+                <span class="line"><br></span>
+                <span class="line">Magui, eres especial, única y brillante,</span>
+                <span class="line">y esta fecha es solo una excusa perfecta,</span>
+                <span class="line">para recordarte que eres importante,</span>
+                <span class="line">y que mi admiración por ti es directa.</span>
+                <span class="line"><br></span>
+                <span class="line">No somos pareja, tal vez "no somos nada",</span>
+                <span class="line">pero el cariño no entiende de etiquetas.</span>
+                <span class="line">Por eso, con respeto y el alma emocionada...</span>
+            </div>
+
+            <div id="question-area" class="buttons-container">
+                <p style="width: 100%; color: var(--primary); font-weight: bold; font-size: 1.3rem;">
+                    A pesar de los kilómetros...<br>¿Te gustaría ser mi San Valentín?
+                </p>
+                <button class="btn-yes" onclick="finish()">¡SÍ! ❤️</button>
+                <button class="btn-no" id="btnNo" onmouseover="moveButton()" onclick="moveButton()">NO</button>
+            </div>
+        </div>
+
+        <div id="screen-end" class="celebration">
+            <h1>¡Sabía que dirías que sí! ❤️</h1>
+            <p style="font-size: 1.5rem;">Me haces muy feliz.</p>
+            <p>Prometo celebrarlo contigo pronto.</p>
+            <br>
+            <p style="font-size: 0.9rem; color: #888;">Con cariño, Genaro.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. LLUVIA DE CORAZONES CONSTANTE ---
+        function createFallingElements() {
+            const element = document.createElement('div');
+            element.classList.add('falling-element');
+            element.innerText = Math.random() > 0.5 ? '❤️' : '🌹';
+            element.style.left = Math.random() * 100 + 'vw';
+            element.style.fontSize = Math.random() * 20 + 15 + 'px';
+            element.style.animationDuration = Math.random() * 3 + 2 + 's'; 
+            document.body.appendChild(element);
+
+            setTimeout(() => { element.remove(); }, 5000);
+        }
+        setInterval(createFallingElements, 400); // Lluvia constante
+
+        // --- 2. LOGICA DEL BOTÓN "NO" TRAVIESO ---
+        function moveButton() {
+            const btnNo = document.getElementById('btnNo');
+            const x = Math.random() * (window.innerWidth - 200);
+            const y = Math.random() * (window.innerHeight - 100);
+            
+            // Hacer que el botón se mueva a posición absoluta para saltar por toda la pantalla
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = x + 'px';
+            btnNo.style.top = y + 'px';
+        }
+
+        // --- 3. INICIO Y MÚSICA ---
+        function startExperience() {
+            document.getElementById('screen-intro').style.display = 'none';
+            document.getElementById('screen-poem').style.display = 'block';
+
+            // INTENTO DE REPRODUCCIÓN DE AUDIO (Enlace Online)
+            const audio = document.getElementById('music');
+            audio.volume = 0.5;
+            audio.play().then(() => {
+                console.log("Música reproduciéndose");
+            }).catch(error => {
+                console.log("Error de audio: " + error);
+                // Si falla el online, intenta buscar un archivo local llamado 'cancion.mp3'
+                audio.src = "cancion.mp3";
+                audio.play();
+            });
+
+            // Animación de lectura
+            const lines = document.querySelectorAll('.line');
+            let delay = 0;
+            lines.forEach((line, index) => {
+                setTimeout(() => {
+                    line.classList.add('visible');
+                    // Mostrar botones al final
+                    if (index === lines.length - 1) {
+                        setTimeout(() => {
+                            const qArea = document.getElementById('question-area');
+                            qArea.style.display = 'flex';
+                            qArea.scrollIntoView({ behavior: 'smooth' });
+                        }, 2000);
+                    }
+                }, delay);
+                delay += 2000;
+            });
+        }
+
+        // --- 4. FINAL FELIZ ---
+        function finish() {
+            document.getElementById('screen-poem').style.display = 'none';
+            document.getElementById('screen-end').style.display = 'block';
+            
+            // Explosión de amor
+            for(let i=0; i<30; i++) {
+                setTimeout(createFallingElements, i * 50);
+            }
+        }
+    </script>
+</body>
+</html>
